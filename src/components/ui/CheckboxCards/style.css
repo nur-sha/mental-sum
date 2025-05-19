@@ -1,0 +1,14 @@
+.multi-select-checkbox {
+  button[role="checkbox"] {
+    visibility: hidden;
+  }
+
+  .checkbox-card {
+    padding-right: var(--space-2);
+    padding-left: var(--space-2);
+  }
+
+  .checkbox-card:has(button[data-state="checked"]) {
+    background-color: var(--accent-9);
+  }
+}

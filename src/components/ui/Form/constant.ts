@@ -1,0 +1,6 @@
+export const FIELD = {
+  NUMBER: "NUMBER",
+  CHECKBOX_CARD: "CHECKBOX_CARD",
+  RADIO_CARD: "RADIO_CARD",
+  SLIDER_PROPS: "SLIDER_PROPS",
+} as const;

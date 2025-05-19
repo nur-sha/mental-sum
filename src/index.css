@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "RobotoMono";
+  src: local("RobotoMono-VariableFont_wght"),
+    url("./assets/fonts/RobotoMono-VariableFont_wght.ttf");
+}
+
+.box-space {
+  margin-top: var(--space-5);
+}
+
+.radix-themes {
+  --default-font-family: "RobotoMono";
+}
