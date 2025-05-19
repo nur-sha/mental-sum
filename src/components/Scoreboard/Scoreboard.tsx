@@ -25,7 +25,9 @@ const Scoreboard = ({ score, data }) => {
           return (
             <Card mb="3">
               <Flex key={index} align="stretch" justify="between">
-                <Box>{item.question}</Box>
+                <Box>
+                  {item.question.trim()} = {item.answer}
+                </Box>
                 <Box>
                   {item.correct ? (
                     <CheckCircledIcon color="green" />
