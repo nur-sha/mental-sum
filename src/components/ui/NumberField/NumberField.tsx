@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 
 export type NumberFieldProps = {
   value: number;
-  onChange: (params: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (params: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   inputProps?: ComponentProps<typeof TextField.Root>;
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;

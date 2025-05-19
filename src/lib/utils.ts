@@ -25,7 +25,7 @@ export function findAllIndexes(arr: string[], matchStr: string): number[] {
 
 export const convertStringToNumber = (value: string) => {
   const number = Number(value);
-  return isNaN(number) ? 0 : number;
+  return isNaN(number) ? value : number;
 };
 
 export const convertEventToNumber = (
@@ -175,13 +175,17 @@ export const generateExpression = ({
   let totalBeforeDivide = null;
 
   for (let i = 0; i < parts; i++) {
-    let number = getRandomInt(min, max) as number;
     const previosOps: string = i > 0 ? operations[i - 1] : "";
     const opsNeeded = i !== parts - 1;
+    const maxLessThan10 = max < 10;
 
     const availableOps =
       previosOps === "/" ? operators.filter((item) => item !== "/") : operators;
     const ops = opsNeeded ? getRandomElementData(availableOps) : "";
+    let number = getRandomInt(
+      min,
+      ops === "*" ? (maxLessThan10 ? max : 10) : max
+    ) as number;
 
     if (opsNeeded) {
       operations.push(ops as string);
@@ -203,11 +207,17 @@ export const generateExpression = ({
       totalBeforeDivide = null;
     }
 
+    if (previosOps === "-") {
+      const maxMinus = numbers[i - 1];
+      number = getRandomInt(min, maxMinus) as number;
+    }
+
     if (ops === "*") {
       totalBeforeDivide = !totalBeforeDivide
         ? number
         : totalBeforeDivide * number;
     }
+
     question += ` ${number} ${ops}`;
 
     numbers.push(number);

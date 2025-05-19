@@ -13,3 +13,5 @@ export default defineConfig({
     },
   },
 });
+
+//https://app.uizard.io/prototypes/8XgqYRzj43uqX63e09Pl

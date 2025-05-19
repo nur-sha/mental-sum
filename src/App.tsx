@@ -3,22 +3,21 @@ import {
   GenerateQuestions,
   type GenerateQuestionFormValues,
 } from "./components/GenerateQuestions/GenerateQuestions";
-import Questions from "./components/Questions/Questions";
+import Questions, {
+  type DataType,
+  type ScoreboardType,
+} from "./components/Questions/Questions";
 import { generateEquation } from "./lib/utils";
 import { Heading } from "@radix-ui/themes";
 import "./App.css";
-
-type Questions = {
-  answer: number;
-  question: string;
-};
+import Scoreboard from "./components/Scoreboard/Scoreboard";
 
 function App() {
-  const [questionData, setQuestionsData] = useState<Questions[]>();
+  const [questionData, setQuestionsData] = useState<DataType[]>();
   const [stage, setStage] = useState("generateQuestion");
+  const [summary, setSummary] = useState<ScoreboardType>();
 
   const onGenerateQuestions = (data: GenerateQuestionFormValues) => {
-    console.log("data::", data);
     const questionsArray = generateEquation(data);
 
     if (Array.isArray(questionsArray) && questionsArray.length > 0) {
@@ -27,16 +26,9 @@ function App() {
     }
   };
 
-  const handleCheckAnswer = () => {
-    console.log("handleCheckAnswer::");
-  };
-
-  const handleOnCompleteQuestions = (score: number) => {
-    console.log("score::", score);
-  };
-
-  const handleeAnswerChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("onHandleAnswerChange::", ev.target.value);
+  const handleOnCompleteQuestions = (value: ScoreboardType) => {
+    setSummary(value);
+    setStage("scoreboard");
   };
 
   return (
@@ -51,11 +43,14 @@ function App() {
         <>
           <Heading className="heading-space">Questions</Heading>
           <Questions
-            data={questionData}
-            onCheckAnswer={handleCheckAnswer}
-            onAnswerChange={handleeAnswerChange}
+            data={questionData as DataType[]}
             onCompleteQuestions={handleOnCompleteQuestions}
           />
+        </>
+      )}
+      {stage === "scoreboard" && (
+        <>
+          <Scoreboard score={summary?.score} data={summary?.summary} />
         </>
       )}
     </div>

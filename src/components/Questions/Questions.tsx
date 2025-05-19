@@ -1,49 +1,56 @@
-//@ts-nocheck
 import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { Box, Button, Flex, Progress, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import NumberField from "../ui/NumberField/NumberField";
-import {
-  convertEventToNumber,
-  convertStringToNumber,
-  removeLastCharFromNumber,
-} from "@/lib/utils";
+import { convertStringToNumber, removeLastCharFromNumber } from "@/lib/utils";
 
-const Questions = ({
-  onCheckAnswer,
-  onAnswerChange,
-  data,
-  onCompleteQuestions,
-}) => {
+export type DataType = {
+  answer: number;
+  question: string;
+};
+
+export type QuestionsProps = {
+  data: DataType[];
+  onCompleteQuestions: (params: ScoreboardType) => void;
+};
+
+export type SummaryDataType = DataType & { correct: boolean };
+
+export type ScoreboardType = {
+  score: number;
+  summary: SummaryDataType[];
+};
+
+const Questions = ({ data, onCompleteQuestions }: QuestionsProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userAnswer, setUserAnswer] = useState<number | string>("");
   const [displayIcon, setDisplayIcon] = useState("");
-  const [score, setScore] = useState(0);
+  const [scoreboard, setScoreboard] = useState<ScoreboardType>({
+    score: 0,
+    summary: [],
+  });
 
   const { question, answer } = data[currentQuestion];
 
-  const handleOnAnswerChange = (e) => {
-    setUserAnswer(convertEventToNumber(e));
-  };
-
   const handleCheckAnswer = () => {
     const correct = answer === userAnswer;
-    console.log({ userAnswer, answer });
-    setScore((prev) => (correct && !displayIcon ? (prev += 1) : prev));
     setDisplayIcon(correct ? "correct" : "wrong");
-    if (correct) {
-      setTimeout(() => {
-        if (data.length === currentQuestion + 1) {
-          onCompleteQuestions(score);
-          return;
-        }
-        setCurrentQuestion((prev) => (prev += 1));
-        setUserAnswer("");
-        setDisplayIcon("");
-      }, 800);
-    } else {
+    const score = {
+      score: correct ? (scoreboard.score += 1) : scoreboard.score,
+      summary: [...scoreboard.summary, { question, answer, correct }],
+    };
+    setScoreboard(score);
+
+    setTimeout(() => {
+      if (data.length === currentQuestion + 1) {
+        onCompleteQuestions(score);
+        return;
+      }
+
+      setCurrentQuestion((prev) => (prev += 1));
       setUserAnswer("");
-    }
+      setDisplayIcon("");
+    }, 800);
   };
 
   const buttons = [1, 2, 3, 4, 5, 6, 7, 8, 9, "-", 0, "⌫", "", , "Enter"];
@@ -55,6 +62,11 @@ const Questions = ({
 
       return;
     }
+
+    if (value === "Enter") {
+      handleCheckAnswer();
+      return;
+    }
     setUserAnswer((prev) => {
       if (value === "-") {
         if (!prev) return value;
@@ -63,13 +75,8 @@ const Questions = ({
 
       return convertStringToNumber(`${prev || ""}${value}`);
     });
-
-    if (value === "Enter") {
-      handleCheckAnswer();
-    }
   };
 
-  console.log({ userAnswer });
   return (
     <div>
       <Flex pt="8" direction="column" gap="3" align="center" justify="center">
@@ -86,7 +93,6 @@ const Questions = ({
           <Box width="100%">
             <NumberField
               placeholder="Answer"
-              onChange={handleOnAnswerChange}
               value={userAnswer as number}
               disabled
             />
@@ -99,13 +105,14 @@ const Questions = ({
             <Cross1Icon style={{ width: 30, height: 30, color: "red" }} />
           )}
         </Flex>
-
-        {/* <Box pt="3">
-          <Button size="4" onClick={handleCheckAnswer}>
-            <Text size="6">Check</Text>
-          </Button>
-        </Box> */}
       </Flex>
+      <Box height="30px" pt="2">
+        {displayIcon === "wrong" && (
+          <Text align="left" as="div">
+            Answer: {answer}
+          </Text>
+        )}
+      </Box>
       <Flex direction="row" gap="3" wrap="wrap" pt="8">
         {buttons.map((item) => {
           return (
@@ -116,7 +123,7 @@ const Questions = ({
                 <Button
                   variant="surface"
                   size="3"
-                  onClick={() => handleButtonClick(item)}
+                  onClick={() => handleButtonClick(item as number)}
                 >
                   {item}
                 </Button>
