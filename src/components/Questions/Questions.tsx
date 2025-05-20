@@ -3,15 +3,19 @@ import { Box, Button, Flex, Progress, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import NumberField from "../ui/NumberField/NumberField";
 import { convertStringToNumber, removeLastCharFromNumber } from "@/lib/utils";
+import VisualHelp from "./VisualHelp";
 
 export type DataType = {
   answer: number;
   question: string;
+  numbers?: number[];
+  operations?: string[];
 };
 
 export type QuestionsProps = {
   data: DataType[];
   onCompleteQuestions: (params: ScoreboardType) => void;
+  visualHelp?: boolean;
 };
 
 export type SummaryDataType = DataType & { correct: boolean };
@@ -21,7 +25,11 @@ export type ScoreboardType = {
   summary: SummaryDataType[];
 };
 
-const Questions = ({ data, onCompleteQuestions }: QuestionsProps) => {
+const Questions = ({
+  data,
+  onCompleteQuestions,
+  visualHelp,
+}: QuestionsProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userAnswer, setUserAnswer] = useState<number | string>("");
   const [displayIcon, setDisplayIcon] = useState("");
@@ -30,7 +38,7 @@ const Questions = ({ data, onCompleteQuestions }: QuestionsProps) => {
     summary: [],
   });
 
-  const { question, answer } = data[currentQuestion];
+  const { question, answer, numbers, operations } = data[currentQuestion];
 
   const handleCheckAnswer = () => {
     const correct = answer === userAnswer;
@@ -86,6 +94,11 @@ const Questions = ({ data, onCompleteQuestions }: QuestionsProps) => {
             size="2"
           />
         </Box>
+        {visualHelp && (
+          <Box>
+            <VisualHelp data={numbers} operator={operations} />
+          </Box>
+        )}
         <Box pt="3" width="100%">
           <Text size="6">{question} = ? </Text>
         </Box>

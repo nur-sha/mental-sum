@@ -11,14 +11,19 @@ import { generateEquation } from "./lib/utils";
 import { Heading } from "@radix-ui/themes";
 import "./App.css";
 import Scoreboard from "./components/Scoreboard/Scoreboard";
+import { LEVEL } from "./constants/questionsConfig";
 
 function App() {
   const [questionData, setQuestionsData] = useState<DataType[]>();
   const [stage, setStage] = useState("generateQuestion");
   const [summary, setSummary] = useState<ScoreboardType>();
+  const [visualHelp, setVisualHelp] = useState<boolean>(false);
 
   const onGenerateQuestions = (data: GenerateQuestionFormValues) => {
     const questionsArray = generateEquation(data);
+    if (data.difficulty === LEVEL.STARTER) {
+      setVisualHelp(true);
+    }
 
     if (Array.isArray(questionsArray) && questionsArray.length > 0) {
       setQuestionsData(questionsArray);
@@ -45,6 +50,7 @@ function App() {
           <Questions
             data={questionData as DataType[]}
             onCompleteQuestions={handleOnCompleteQuestions}
+            visualHelp={visualHelp}
           />
         </>
       )}

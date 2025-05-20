@@ -245,7 +245,7 @@ export const generateEquation = (params: GenerateEquation) => {
     });
 
     const answer = evaluateBodmas(numbers, operations);
-    return { question, answer };
+    return { question, answer, numbers, operations };
   });
 
   return equationArray;

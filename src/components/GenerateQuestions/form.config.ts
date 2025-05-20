@@ -36,10 +36,14 @@ export const formFields = [
       items: "options",
     },
     options: [
+      { value: LEVEL.STARTER, title: "Starter" },
       { value: LEVEL.EASY, title: "Easy" },
       { value: LEVEL.MEDIUM, title: "Medium" },
       { value: LEVEL.HARD, title: "Hard" },
     ],
+    radioProps: {
+      columns: { initial: "4" },
+    },
     name: "difficulty",
     label: "Difficulty",
     rules: { required: true },

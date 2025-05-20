@@ -1,4 +1,5 @@
 export const LEVEL = {
+  STARTER: "STARTER",
   EASY: "EASY",
   MEDIUM: "MEDIUM",
   HARD: "HARD",
@@ -6,6 +7,7 @@ export const LEVEL = {
 };
 
 export const DIFFICULTY = {
+  [LEVEL.STARTER]: 2,
   [LEVEL.EASY]: 2,
   [LEVEL.MEDIUM]: 3,
   [LEVEL.HARD]: 5,
